@@ -83,6 +83,24 @@ class Lunchy
     end
   end
 
+  def disable(params)
+    raise ArgumentError, "disable [name]" if params.empty?
+
+    with_match params[0] do |_, path|
+        FileUtils.mv path, path + '.disabled'
+    end
+  end
+
+  def enable(params)
+    raise ArgumentError, "enable [name]" if params.empty?
+
+    with_match params[0] do |_, path|
+        if path =~ /\.disabled$/
+            FileUtils.mv path, path.split(/\.disabled$/)[0]
+        end
+    end
+  end
+
   private
 
   def force
@@ -122,6 +140,9 @@ class Lunchy
       dirs.each do |dir|
         Dir["#{File.expand_path(dir)}/*.plist"].inject(plists) do |memo, filename|
           memo[File.basename(filename, ".plist")] = filename; memo
+        end
+        Dir["#{File.expand_path(dir)}/*.plist.disabled"].inject(plists) do |memo, filename|
+          memo[File.basename(filename, ".plist.disabled") + ' - D/A'] = filename; memo
         end
       end
       plists

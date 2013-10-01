@@ -5,7 +5,7 @@ require 'optparse'
 require 'lunchy'
 
 CONFIG = {}
-OPERATIONS = %w(start stop restart ls list status install show edit)
+OPERATIONS = %w(start stop restart ls list status install show edit disable enable)
 
 option_parser = OptionParser.new do |opts|
   opts.banner = "Lunchy #{Lunchy::VERSION}, the friendly launchctl wrapper\n" \
